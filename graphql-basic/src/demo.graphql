@@ -1,0 +1,43 @@
+type Book {
+  title: String!
+  author: Author!
+  test(preferred: Boolean): String
+}
+
+input InputBook {
+  title: String!
+  author: String!
+  test: String!
+}
+
+type Author {
+  name: String!
+}
+
+type Library {
+  branch: String!
+  books: [Book!]
+}
+
+type Query {
+  books: [Book]
+  libraries: [Library]
+  findBookByBranch(branchName: String!): Book!
+  currentNumber: Int
+}
+
+type Mutation {
+  insertNewBook(book: InputBook!): Book!
+}
+
+type Subscription {
+  numberIncremented: Int
+}
+
+type Query {
+  hero: Hero
+}
+
+type Hero {
+  name: String
+}
