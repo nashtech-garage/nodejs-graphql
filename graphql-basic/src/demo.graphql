@@ -24,6 +24,12 @@ type Query {
   libraries: [Library]
   findBookByBranch(branchName: String!): Book!
   currentNumber: Int
+  throwError: Error
+}
+
+type Error {
+  message: String!
+  error: String!
 }
 
 type Mutation {

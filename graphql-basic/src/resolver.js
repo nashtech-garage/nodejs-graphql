@@ -30,6 +30,16 @@ export const resolvers = {
     },
     currentNumber() {
       return currentNumber;
+    },
+    throwError() {
+      try {
+        throw new Error("Example demo throw an error ");
+      } catch (error) {
+        return {
+          message: error.message,
+          error: "Demo error"
+        };
+      }
     }
   },
   Mutation: {
