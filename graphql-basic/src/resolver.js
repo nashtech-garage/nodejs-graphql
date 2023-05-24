@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { books, libraries } from "./data";
 import { fileURLToPath } from "url";
 import { PubSub } from "graphql-subscriptions";
+import Dataloader from "dataloader";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pubsub = new PubSub();
@@ -14,6 +15,26 @@ function incrementNumber() {
   setTimeout(incrementNumber, 1000);
 }
 incrementNumber();
+
+const getLibraryByBranchName = (name) => {
+  console.log("Find branch name for books: ", name);
+  return libraries.find((lib) => lib.branch === name);
+}
+
+const getBookByBranchName = (name) => {
+  const data = books.filter((book) => book.branch === name);
+  console.log("filter for book: ", data)
+  return data;
+}
+
+const getBookByBranchNames = (names) => {
+  console.log('From dataloader, ', names);
+  const data = names.map((name) => getBookByBranchName(name));
+  console.log("return from loader ", data);
+  return Promise.resolve(data);
+}
+
+const domain = new Dataloader(getBookByBranchNames);
 
 //Resolver
 export const resolvers = {
@@ -55,7 +76,8 @@ export const resolvers = {
   },
   Library: {
     books(parent) {
-      return books.filter((book) => book.branch === parent.branch);
+      //      return getBookByBranchName(parent.branch);
+      return domain.load(parent.branch); 
     }
   },
   Book: {
